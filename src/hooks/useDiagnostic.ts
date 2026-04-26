@@ -4,26 +4,30 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { modules } from "@/data/modules";
 import { questions } from "@/data/questions";
-import { STORAGE_KEY } from "@/lib/diagnosticContent";
-import { parseStoredAnswers } from "@/lib/diagnosticStorage";
-import { AnswersMap, AnswerValue } from "@/types/diagnostic";
+import { PROFILE_STORAGE_KEY, STORAGE_KEY } from "@/lib/diagnosticContent";
+import { parseStoredAnswers, parseStoredProfile } from "@/lib/diagnosticStorage";
+import { AnswersMap, AnswerValue, UserProfile } from "@/types/diagnostic";
 
 export function useDiagnostic() {
   const router = useRouter();
   const [answers, setAnswers] = useState<AnswersMap>({});
+  const [profile, setProfileState] = useState<UserProfile>("person");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     const parsedAnswers = parseStoredAnswers(window.localStorage.getItem(STORAGE_KEY));
+    const parsedProfile = parseStoredProfile(window.localStorage.getItem(PROFILE_STORAGE_KEY));
     setAnswers(parsedAnswers);
+    setProfileState(parsedProfile);
     setIsHydrated(true);
   }, []);
 
   useEffect(() => {
     if (!isHydrated) return;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
-  }, [answers, isHydrated]);
+    window.localStorage.setItem(PROFILE_STORAGE_KEY, profile);
+  }, [answers, isHydrated, profile]);
 
   const currentQuestion = questions[currentIndex];
   const currentModule = modules.find((module) => module.id === currentQuestion.moduleId) ?? null;
@@ -60,6 +64,10 @@ export function useDiagnostic() {
     }));
   }
 
+  function setProfile(value: UserProfile) {
+    setProfileState(value);
+  }
+
   function nextQuestion() {
     if (!selectedValue) return;
 
@@ -77,12 +85,15 @@ export function useDiagnostic() {
 
   function resetDiagnostic() {
     window.localStorage.removeItem(STORAGE_KEY);
+    window.localStorage.removeItem(PROFILE_STORAGE_KEY);
     setAnswers({});
+    setProfileState("person");
     setCurrentIndex(0);
   }
 
   return {
     answers,
+    profile,
     currentIndex,
     currentQuestion,
     currentModule,
@@ -93,6 +104,7 @@ export function useDiagnostic() {
     isLastQuestion,
     isHydrated,
     moduleCompletion,
+    setProfile,
     selectAnswer,
     nextQuestion,
     previousQuestion,

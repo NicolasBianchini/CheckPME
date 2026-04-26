@@ -5,6 +5,7 @@ import {
   AlertTriangle,
   ArrowLeft,
   Building2,
+  CheckCheck,
   CheckCircle2,
   CircleOff,
 } from "lucide-react";
@@ -58,7 +59,55 @@ export default async function TopicPage({ params }: TopicPageProps) {
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <section className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="rounded-[1.8rem] border border-brand-200 bg-brand-50/70 p-6 shadow-soft">
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-white p-3 text-brand-700 ring-1 ring-brand-100">
+                <CheckCheck className="h-5 w-5" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-950">Comece por este checklist</h2>
+            </div>
+
+            <div className="mt-5 space-y-3">
+              {topic.quickChecklist.map((item) => (
+                <div
+                  key={item}
+                  className="rounded-2xl border border-brand-100 bg-white px-4 py-4 text-sm leading-7 text-slate-800"
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[1.8rem] border border-slate-200/80 bg-white/95 p-6 shadow-soft">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">
+              Como usar esta página
+            </p>
+            <h2 className="mt-2 text-2xl font-bold text-slate-950">
+              Entenda o risco, veja o que fazer e guarde o que faz sentido para sua rotina.
+            </h2>
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              <MiniStep
+                step="1"
+                title="Veja os sinais"
+                text="Entenda o que costuma indicar problema nesse tema."
+              />
+              <MiniStep
+                step="2"
+                title="Aja na prática"
+                text="Escolha uma ou duas ações para começar ainda hoje."
+              />
+              <MiniStep
+                step="3"
+                title="Aprofunde depois"
+                text="Use os materiais recomendados para estudar com mais calma."
+              />
+            </div>
+          </div>
+        </section>
+
+        <div className="grid items-stretch gap-6 lg:grid-cols-2">
           <TopicBlock
             icon={<AlertTriangle className="h-5 w-5" />}
             title="Sinais de alerta"
@@ -130,6 +179,26 @@ export default async function TopicPage({ params }: TopicPageProps) {
   );
 }
 
+function MiniStep({
+  step,
+  title,
+  text
+}: {
+  step: string;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-[1.4rem] border border-slate-200 bg-slate-50 p-4">
+      <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-sm font-bold text-white">
+        {step}
+      </div>
+      <p className="mt-3 text-base font-bold text-slate-950">{title}</p>
+      <p className="mt-2 text-sm leading-7 text-slate-600">{text}</p>
+    </div>
+  );
+}
+
 function TopicBlock({
   title,
   items,
@@ -167,17 +236,17 @@ function TopicBlock({
   };
 
   return (
-    <section className={`rounded-[1.8rem] border p-6 shadow-soft ${tones[tone]}`}>
+    <section className={`flex h-full min-h-[27rem] flex-col rounded-[1.8rem] border p-6 shadow-soft ${tones[tone]}`}>
       <div className="flex items-center gap-3">
         <div className={`rounded-2xl p-3 ${iconTones[tone]}`}>{icon}</div>
         <h2 className="text-2xl font-bold">{title}</h2>
       </div>
 
-      <div className="mt-5 space-y-3">
+      <div className="mt-5 grid flex-1 auto-rows-fr gap-3">
         {items.map((item) => (
           <p
             key={item}
-            className={`rounded-2xl px-4 py-4 text-sm leading-7 ${itemTones[tone]}`}
+            className={`flex items-center rounded-2xl px-4 py-4 text-sm leading-7 ${itemTones[tone]}`}
           >
             {item}
           </p>

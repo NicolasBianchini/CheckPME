@@ -1,11 +1,13 @@
 "use client";
 
+import { Building2, UserRound } from "lucide-react";
 import { Button } from "@/components/Button";
 import { ProgressBar } from "@/components/ProgressBar";
 import { QuestionCard } from "@/components/QuestionCard";
 import { questions } from "@/data/questions";
-import { answerOptions } from "@/lib/diagnosticContent";
+import { answerOptions, profileOptions } from "@/lib/diagnosticContent";
 import { useDiagnostic } from "@/hooks/useDiagnostic";
+import { UserProfile } from "@/types/diagnostic";
 
 export default function DiagnosticPage() {
   const {
@@ -14,11 +16,13 @@ export default function DiagnosticPage() {
     currentModule,
     currentModuleIndex,
     currentModuleQuestions,
+    profile,
     selectedValue,
     answeredCount,
     isLastQuestion,
     moduleCompletion,
     isHydrated,
+    setProfile,
     selectAnswer,
     nextQuestion,
     previousQuestion,
@@ -35,7 +39,7 @@ export default function DiagnosticPage() {
 
   return (
     <div className="px-6 py-10 lg:px-8 lg:py-14">
-      <div className="mx-auto max-w-5xl space-y-6">
+      <div className="mx-auto max-w-6xl space-y-6">
         <div className="space-y-3">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">
             CheckPME Segura
@@ -49,6 +53,56 @@ export default function DiagnosticPage() {
           </p>
         </div>
 
+        <section className="rounded-[1.8rem] border border-slate-200/80 bg-white/90 p-5 shadow-soft">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">
+                Perfil do diagnóstico
+              </p>
+              <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600">
+                Escolha o contexto para o relatório adaptar os próximos passos.
+              </p>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[28rem]">
+              {profileOptions.map((option) => {
+                const isSelected = profile === option.value;
+
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setProfile(option.value)}
+                    className={[
+                      "flex min-h-24 items-start gap-3 rounded-2xl border p-4 text-left transition",
+                      isSelected
+                        ? "border-brand-400 bg-brand-50 shadow-soft"
+                        : "border-slate-200 bg-white hover:border-brand-200 hover:bg-slate-50"
+                    ].join(" ")}
+                  >
+                    <span
+                      className={[
+                        "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
+                        isSelected ? "bg-brand-600 text-white" : "bg-slate-100 text-slate-700"
+                      ].join(" ")}
+                    >
+                      <ProfileIcon profile={option.value} />
+                    </span>
+                    <span>
+                      <span className="block text-sm font-bold text-slate-950">
+                        {option.label}
+                      </span>
+                      <span className="mt-1 block text-xs leading-5 text-slate-600">
+                        {option.description}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
         <ProgressBar
           current={currentIndex}
           total={questions.length}
@@ -57,7 +111,7 @@ export default function DiagnosticPage() {
           moduleTotal={currentModuleQuestions.length}
         />
 
-        <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.55fr)_minmax(20rem,0.85fr)]">
           <div key={currentQuestion.id}>
             <QuestionCard
               question={currentQuestion}
@@ -148,4 +202,12 @@ export default function DiagnosticPage() {
       </div>
     </div>
   );
+}
+
+function ProfileIcon({ profile }: { profile: UserProfile }) {
+  if (profile === "business") {
+    return <Building2 className="h-5 w-5" aria-hidden="true" />;
+  }
+
+  return <UserRound className="h-5 w-5" aria-hidden="true" />;
 }

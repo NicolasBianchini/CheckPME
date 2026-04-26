@@ -22,8 +22,8 @@ export function QuestionCard({
   onSelect
 }: QuestionCardProps) {
   return (
-    <section className="panel-enter rounded-[2rem] border border-slate-200/80 bg-white/95 p-6 shadow-panel lg:p-8">
-      <div className="mb-8 space-y-4">
+    <section className="panel-enter rounded-[2rem] border border-slate-200/80 bg-white/95 p-7 shadow-panel lg:p-10">
+      <div className="mb-9 space-y-5">
         <div className="flex flex-wrap items-center gap-3">
           <div className="inline-flex rounded-full bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700">
             {moduleTitle}
@@ -47,7 +47,7 @@ export function QuestionCard({
         </p>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-5">
         {options.map((option) => {
           const isSelected = selectedValue === option.value;
 
@@ -57,7 +57,7 @@ export function QuestionCard({
               type="button"
               onClick={() => onSelect(option.value)}
               className={[
-                "rounded-[1.4rem] border p-5 text-left transition duration-200",
+                "rounded-[1.4rem] border p-5 text-left transition duration-200 lg:p-6",
                 isSelected
                   ? "border-brand-400 bg-brand-50 shadow-soft"
                   : "border-slate-200 bg-white hover:border-brand-200 hover:bg-slate-50"

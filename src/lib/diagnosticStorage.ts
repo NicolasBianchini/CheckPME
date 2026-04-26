@@ -1,4 +1,4 @@
-import { AnswersMap, AnswerValue } from "@/types/diagnostic";
+import { AnswersMap, AnswerValue, UserProfile } from "@/types/diagnostic";
 
 export function parseStoredAnswers(rawValue: string | null): AnswersMap {
   if (!rawValue) return {};
@@ -18,4 +18,9 @@ export function parseStoredAnswers(rawValue: string | null): AnswersMap {
   } catch {
     return {};
   }
+}
+
+export function parseStoredProfile(rawValue: string | null): UserProfile {
+  if (rawValue === "business") return "business";
+  return "person";
 }

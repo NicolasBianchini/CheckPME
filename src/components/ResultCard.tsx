@@ -13,27 +13,48 @@ export function ResultCard({ result }: { result: DiagnosticResult }) {
               Seu resultado
             </p>
             <RiskBadge level={result.level} />
+            <span className="inline-flex rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-200">
+              Perfil {result.profileLabel}
+            </span>
           </div>
 
           <div>
             <h2 className="text-3xl font-black text-slate-950 sm:text-4xl">
               {getRiskLabel(result.level)}
             </h2>
+            <p className="mt-3 max-w-2xl text-lg font-semibold text-slate-800">
+              {result.reportHeadline}
+            </p>
             <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
               {riskSummaryByLevel[result.level]}
             </p>
           </div>
 
-          <div className="rounded-[1.6rem] border border-slate-200 bg-slate-50 p-5">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
-              Resumo geral
-            </p>
-            <p className="mt-3 text-base leading-7 text-slate-700">{result.executiveSummary}</p>
+          <div className="grid gap-4 md:grid-cols-[0.95fr_1.05fr]">
+            <div className="rounded-[1.6rem] border border-slate-200 bg-slate-50 p-5">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
+                Resumo geral
+              </p>
+              <p className="mt-3 text-base leading-7 text-slate-700">{result.executiveSummary}</p>
+            </div>
+
+            <div className="rounded-[1.6rem] border border-brand-100 bg-brand-50/70 p-5">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">
+                Ações rápidas
+              </p>
+              <div className="mt-3 space-y-2">
+                {result.quickWins.slice(0, 3).map((item) => (
+                  <p key={item} className="text-sm leading-7 text-slate-700">
+                    {item}
+                  </p>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="bg-slate-950 p-6 text-white lg:p-8">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
             <MetricCard
               label="Pontuação final"
               value={`${result.totalScore} / ${result.maxScore}`}

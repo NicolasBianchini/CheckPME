@@ -7,6 +7,7 @@ import {
 export const educationalTopics: EducationalTopic[] = [
   {
     moduleId: "phishing",
+    slug: "phishing",
     title: "Golpes por mensagem",
     explanation:
       "Esse tema fala de mensagens que tentam enganar você para clicar em links, baixar arquivos ou passar dados pessoais.",
@@ -20,6 +21,7 @@ export const educationalTopics: EducationalTopic[] = [
   },
   {
     moduleId: "malware",
+    slug: "malware-ransomware",
     title: "Vírus e arquivos perigosos",
     explanation:
       "Esse tema mostra cuidados para evitar vírus, perda de arquivos e situações em que o aparelho para de funcionar direito.",
@@ -33,6 +35,7 @@ export const educationalTopics: EducationalTopic[] = [
   },
   {
     moduleId: "passwords",
+    slug: "senhas",
     title: "Senhas e acesso às contas",
     explanation:
       "Aqui o foco é deixar suas contas mais protegidas para que outras pessoas não consigam entrar com facilidade.",
@@ -46,6 +49,7 @@ export const educationalTopics: EducationalTopic[] = [
   },
   {
     moduleId: "networks",
+    slug: "redes-e-aparelhos",
     title: "Wi-Fi e aparelhos conectados",
     explanation:
       "Esse tema ajuda a perceber riscos no Wi-Fi, no roteador e em aparelhos conectados, como câmeras, TVs e assistentes.",
@@ -68,7 +72,9 @@ export const learningResources: LearningResource[] = [
     description:
       "Página oficial da CISA com sinais comuns de golpe, exemplos e dicas simples para evitar cair em armadilhas.",
     source: "CISA",
-    url: "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing"
+    url: "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing",
+    estimatedTime: "5 min",
+    formatLabel: "Leitura rápida"
   },
   {
     id: "phishing-cisa-video",
@@ -78,7 +84,9 @@ export const learningResources: LearningResource[] = [
     description:
       "Vídeo em português do projeto Cidadão na Rede explicando como reconhecer mensagens com cara de golpe.",
     source: "Cidadão na Rede / NIC.br",
-    url: "https://cidadaonarede.nic.br/pt/videos/nao-clique-em-tudo-que-receber"
+    url: "https://cidadaonarede.nic.br/pt/videos/nao-clique-em-tudo-que-receber",
+    estimatedTime: "Vídeo curto",
+    formatLabel: "Vídeo em PT-BR"
   },
   {
     id: "malware-cisa-guide",
@@ -88,7 +96,9 @@ export const learningResources: LearningResource[] = [
     description:
       "Central oficial com orientações práticas sobre cópias de segurança, atualização e prevenção contra bloqueio de arquivos.",
     source: "CISA",
-    url: "https://www.cisa.gov/stopransomware"
+    url: "https://www.cisa.gov/stopransomware",
+    estimatedTime: "7 min",
+    formatLabel: "Guia prático"
   },
   {
     id: "malware-cisa-overview",
@@ -98,7 +108,9 @@ export const learningResources: LearningResource[] = [
     description:
       "Vídeo em português mostrando por que atualizar sistema e programas é um cuidado básico para evitar problemas.",
     source: "Cidadão na Rede / NIC.br",
-    url: "https://cidadaonarede.nic.br/pt/videos/seguranca/mantenha-os-programas-atualizados"
+    url: "https://cidadaonarede.nic.br/pt/videos/seguranca/mantenha-os-programas-atualizados",
+    estimatedTime: "Vídeo curto",
+    formatLabel: "Vídeo em PT-BR"
   },
   {
     id: "passwords-google-security-checkup",
@@ -108,7 +120,9 @@ export const learningResources: LearningResource[] = [
     description:
       "Reúne verificação em duas etapas, checagem de senhas e outras ferramentas simples para proteger contas online.",
     source: "Google Safety Center",
-    url: "https://safety.google/intl/en_us/settings/security-settings/"
+    url: "https://safety.google/intl/en_us/settings/security-settings/",
+    estimatedTime: "6 min",
+    formatLabel: "Passo a passo"
   },
   {
     id: "passwords-ftc-2fa",
@@ -118,7 +132,9 @@ export const learningResources: LearningResource[] = [
     description:
       "Vídeo em português explicando de forma simples como funciona a verificação em duas etapas e por que ela ajuda tanto.",
     source: "Cidadão na Rede / NIC.br",
-    url: "https://cidadaonarede.nic.br/pt/videos/verificacion-en-dos-pasos"
+    url: "https://cidadaonarede.nic.br/pt/videos/verificacion-en-dos-pasos",
+    estimatedTime: "Vídeo curto",
+    formatLabel: "Vídeo em PT-BR"
   },
   {
     id: "networks-microsoft-wifi",
@@ -128,7 +144,9 @@ export const learningResources: LearningResource[] = [
     description:
       "Página oficial da Microsoft com cuidados práticos para redes sem fio e Wi-Fi público.",
     source: "Microsoft Support",
-    url: "https://support.microsoft.com/en-us/security/be-safer-over-wireless-connections"
+    url: "https://support.microsoft.com/en-us/security/be-safer-over-wireless-connections",
+    estimatedTime: "5 min",
+    formatLabel: "Leitura rápida"
   },
   {
     id: "networks-google-nest-2sv",
@@ -138,7 +156,9 @@ export const learningResources: LearningResource[] = [
     description:
       "Vídeo em português com cuidados simples para usar Wi-Fi público sem se expor tanto a golpes e acessos indevidos.",
     source: "Cidadão na Rede / NIC.br",
-    url: "https://cidadaonarede.nic.br/pt/videos/redes-publicas"
+    url: "https://cidadaonarede.nic.br/pt/videos/redes-publicas",
+    estimatedTime: "Vídeo curto",
+    formatLabel: "Vídeo em PT-BR"
   },
   {
     id: "networks-router-password-video",
@@ -148,7 +168,9 @@ export const learningResources: LearningResource[] = [
     description:
       "Vídeo em português com orientações práticas para não deixar o roteador com a configuração padrão.",
     source: "Cidadão na Rede / NIC.br",
-    url: "https://cidadaonarede.nic.br/pt/videos/change-your-router-password"
+    url: "https://cidadaonarede.nic.br/pt/videos/change-your-router-password",
+    estimatedTime: "Vídeo curto",
+    formatLabel: "Vídeo em PT-BR"
   }
 ];
 
@@ -161,6 +183,11 @@ export const topicDetailPages: TopicDetailPage[] = [
       "Golpes por mensagem costumam usar pressa, medo ou curiosidade para fazer você clicar sem pensar. O objetivo quase sempre é roubar dados, dinheiro ou acesso a contas.",
     whyItMatters:
       "Esse é um dos tipos de golpe mais comuns porque chega por canais que usamos o tempo todo, como e-mail, WhatsApp e SMS.",
+    quickChecklist: [
+      "Pare e leia com calma antes de clicar.",
+      "Confira quem enviou a mensagem.",
+      "Nunca mande senha, código ou documento por impulso."
+    ],
     warningSigns: [
       "Mensagem dizendo que sua conta será bloqueada se você não agir agora.",
       "Pedido inesperado de senha, código, documento ou dado bancário.",
@@ -192,6 +219,11 @@ export const topicDetailPages: TopicDetailPage[] = [
       "Vírus e arquivos perigosos podem roubar informações, travar o aparelho ou até bloquear documentos importantes.",
     whyItMatters:
       "Na prática, isso pode gerar perda de trabalho, parada nas atividades e dor de cabeça para recuperar arquivos e acessos.",
+    quickChecklist: [
+      "Mantenha sistema e programas atualizados.",
+      "Tenha cópia dos arquivos importantes em mais de um lugar.",
+      "Não baixe arquivos de origem duvidosa."
+    ],
     warningSigns: [
       "Arquivo recebido sem contexto ou vindo de alguém desconhecido.",
       "Computador mais lento que o normal sem motivo claro.",
@@ -223,6 +255,11 @@ export const topicDetailPages: TopicDetailPage[] = [
       "Boa parte das invasões começa com senha fraca, repetida ou vazada. Por isso, cuidar das senhas continua sendo uma das formas mais simples de se proteger.",
     whyItMatters:
       "Quando alguém descobre uma senha sua, pode tentar entrar em várias contas ao mesmo tempo, principalmente se você costuma repetir a mesma combinação.",
+    quickChecklist: [
+      "Troque senhas repetidas começando pelo e-mail.",
+      "Ative verificação em duas etapas.",
+      "Use uma forma segura de guardar senhas."
+    ],
     warningSigns: [
       "Você usa a mesma senha em várias contas.",
       "A senha é curta, óbvia ou baseada em nome e data.",
@@ -254,6 +291,11 @@ export const topicDetailPages: TopicDetailPage[] = [
       "Wi-Fi, roteador, câmeras, TVs e outros aparelhos conectados também precisam de atenção. Quando ficam esquecidos, podem virar uma porta de entrada para problemas.",
     whyItMatters:
       "Uma rede mal cuidada pode expor dados, facilitar acessos indevidos e afetar tanto a casa quanto a empresa.",
+    quickChecklist: [
+      "Troque a senha padrão do roteador.",
+      "Evite usar Wi-Fi público para contas sensíveis.",
+      "Revise e atualize aparelhos conectados."
+    ],
     warningSigns: [
       "Você nunca trocou a senha padrão do roteador.",
       "Usa Wi-Fi público para acessar contas sensíveis.",

@@ -41,7 +41,7 @@ export function ModuleCard({ module }: { module: DiagnosticModule }) {
             href={`/aprenda/${topicPage.slug}`}
             className="mt-5 inline-flex text-sm font-semibold text-brand-700 transition hover:text-brand-800"
           >
-            Ver página deste tema
+            Saiba mais
           </Link>
         ) : null}
       </div>

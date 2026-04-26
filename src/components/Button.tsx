@@ -12,13 +12,13 @@ interface BaseProps {
 
 interface ButtonElementProps
   extends BaseProps,
-    ButtonHTMLAttributes<HTMLButtonElement> {
+    Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
   href?: undefined;
 }
 
 interface LinkElementProps
   extends BaseProps,
-    AnchorHTMLAttributes<HTMLAnchorElement> {
+    Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children"> {
   href: string;
   onClick?: never;
 }
@@ -78,8 +78,10 @@ export function Button({
     );
   }
 
+  const buttonProps = props as ButtonHTMLAttributes<HTMLButtonElement>;
+
   return (
-    <button className={mergedClassName} disabled={disabled} {...props}>
+    <button className={mergedClassName} disabled={disabled} {...buttonProps}>
       {children}
     </button>
   );

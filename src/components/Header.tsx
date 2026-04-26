@@ -25,6 +25,9 @@ export function Header() {
           <Link href="/#metodologia" className="transition hover:text-brand-700">
             Metodologia
           </Link>
+          <Link href="/aprenda" className="transition hover:text-brand-700">
+            Aprenda
+          </Link>
           <Link
             href="/diagnostico"
             className="rounded-full bg-brand-50 px-4 py-2 font-semibold text-brand-700 transition hover:bg-brand-100"
