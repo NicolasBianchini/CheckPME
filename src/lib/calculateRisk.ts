@@ -2,7 +2,9 @@ import { modules } from "@/data/modules";
 import { questions } from "@/data/questions";
 import {
   executiveByLevel,
+  reportHeadlineByLevel,
   moduleInsightMap,
+  profileSummaryMap,
   RISK_THRESHOLDS
 } from "@/lib/diagnosticContent";
 import {
@@ -10,7 +12,8 @@ import {
   DiagnosticResult,
   ModuleScore,
   Recommendation,
-  RiskLevel
+  RiskLevel,
+  UserProfile
 } from "@/types/diagnostic";
 
 export function getAnswerScore(answer?: keyof typeof scoreByAnswer) {
@@ -75,7 +78,10 @@ export function getStrengthModules(moduleScores: ModuleScore[]) {
   return sorted.filter((module) => module.score <= 2).slice(0, 2);
 }
 
-export function buildRecommendations(moduleScores: ModuleScore[]): Recommendation[] {
+export function buildRecommendations(
+  moduleScores: ModuleScore[],
+  profile: UserProfile
+): Recommendation[] {
   return moduleScores
     .filter((module) => module.score >= 4)
     .sort((a, b) => b.score - a.score)
@@ -86,7 +92,9 @@ export function buildRecommendations(moduleScores: ModuleScore[]): Recommendatio
         throw new Error(`Módulo não encontrado: ${module.moduleId}`);
       }
 
-      const insight = moduleInsightMap[module.moduleId];
+      const insight =
+        moduleInsightMap[module.moduleId][module.score >= 6 ? "high" : "medium"];
+      const profileAction = getProfileAction(module.moduleId, profile);
 
       return {
         moduleId: module.moduleId,
@@ -94,7 +102,9 @@ export function buildRecommendations(moduleScores: ModuleScore[]): Recommendatio
         guideModule: moduleMeta.guideModule,
         summary: insight.summary,
         impact: insight.impact,
-        nextStep: insight.nextStep
+        nextStep: insight.nextStep,
+        urgencyLabel: insight.urgencyLabel,
+        firstWeekPlan: [...insight.firstWeekPlan, profileAction]
       };
     });
 }
@@ -125,12 +135,49 @@ function buildPriorityActions(recommendations: Recommendation[]) {
   return recommendations.slice(0, 3).map((recommendation) => recommendation.nextStep);
 }
 
-export function buildDiagnosticResult(answers: AnswersMap): DiagnosticResult {
+function buildQuickWins(recommendations: Recommendation[]) {
+  if (recommendations.length === 0) {
+    return [
+      "Revisar seus cuidados uma vez por mês.",
+      "Compartilhar essas orientações com a equipe ou com a família.",
+      "Manter atualizações e senhas em dia."
+    ];
+  }
+
+  return recommendations
+    .flatMap((recommendation) => recommendation.firstWeekPlan)
+    .slice(0, 4);
+}
+
+function getProfileAction(moduleId: ModuleScore["moduleId"], profile: UserProfile) {
+  const personalActions: Record<ModuleScore["moduleId"], string> = {
+    phishing: "Combine com familiares que pedidos de dinheiro ou código precisam ser confirmados por outro canal.",
+    malware: "Veja quais fotos, documentos e arquivos pessoais não podem ser perdidos e faça uma cópia deles.",
+    passwords: "Comece pelo e-mail pessoal, porque ele costuma recuperar o acesso das outras contas.",
+    networks: "Revise a senha do Wi-Fi de casa e confira quais aparelhos estão conectados."
+  };
+
+  const businessActions: Record<ModuleScore["moduleId"], string> = {
+    phishing: "Combine com a equipe uma regra simples para confirmar pagamentos, boletos e pedidos urgentes.",
+    malware: "Defina onde ficam os arquivos importantes da empresa e quem confere as cópias de segurança.",
+    passwords: "Revise contas compartilhadas e desligue acessos de pessoas que não trabalham mais na empresa.",
+    networks: "Separe, quando possível, a rede de clientes ou visitantes da rede usada pela equipe."
+  };
+
+  return profile === "business"
+    ? businessActions[moduleId]
+    : personalActions[moduleId];
+}
+
+export function buildDiagnosticResult(
+  answers: AnswersMap,
+  profile: UserProfile = "person"
+): DiagnosticResult {
   const totalScore = calculateTotalScore(answers);
   const moduleScores = calculateModuleScores(answers);
   const answeredQuestions = questions.filter((question) => answers[question.id]).length;
   const level = getRiskLevel(totalScore);
-  const recommendations = buildRecommendations(moduleScores);
+  const recommendations = buildRecommendations(moduleScores, profile);
 
   return {
     totalScore,
@@ -144,6 +191,11 @@ export function buildDiagnosticResult(answers: AnswersMap): DiagnosticResult {
     recommendations,
     executiveSummary: executiveByLevel[level],
     exposureAreas: buildExposureAreas(recommendations),
-    priorityActions: buildPriorityActions(recommendations)
+    priorityActions: buildPriorityActions(recommendations),
+    quickWins: buildQuickWins(recommendations),
+    reportHeadline: reportHeadlineByLevel[level],
+    profile,
+    profileLabel: profile === "business" ? "Empresa" : "Pessoa",
+    profileSummary: profileSummaryMap[profile]
   };
 }

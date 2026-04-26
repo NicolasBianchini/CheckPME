@@ -62,3 +62,41 @@ button {
 .panel-enter {
   animation: panelEnter 0.28s ease-out;
 }
+
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  body {
+    color: #0f172a;
+  }
+
+  .app-shell {
+    background-image: none !important;
+  }
+
+  header,
+  .no-print {
+    display: none !important;
+  }
+
+  .print-report {
+    display: block !important;
+  }
+
+  .print-report section,
+  .print-report article,
+  .print-report div {
+    box-shadow: none !important;
+  }
+
+  a {
+    text-decoration: none !important;
+  }
+}

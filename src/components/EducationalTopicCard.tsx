@@ -1,9 +1,10 @@
-import { BookOpen, Lightbulb, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, BookOpen, Lightbulb, Sparkles } from "lucide-react";
 import { EducationalTopic } from "@/types/diagnostic";
 
 export function EducationalTopicCard({ topic }: { topic: EducationalTopic }) {
   return (
-    <article className="rounded-[1.8rem] border border-slate-200/80 bg-white/95 p-6 shadow-soft">
+    <article className="flex h-full flex-col rounded-[1.8rem] border border-slate-200/80 bg-white/95 p-6 shadow-soft">
       <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
         <BookOpen className="h-7 w-7 stroke-[2]" />
       </div>
@@ -32,6 +33,14 @@ export function EducationalTopicCard({ topic }: { topic: EducationalTopic }) {
           ))}
         </div>
       </div>
+
+      <Link
+        href={`/aprenda/${topic.slug}`}
+        className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 transition hover:text-brand-800"
+      >
+        Abrir este tema
+        <ArrowRight className="h-4 w-4" />
+      </Link>
     </article>
   );
 }

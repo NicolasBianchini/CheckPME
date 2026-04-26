@@ -4,6 +4,8 @@ export type AnswerValue = "yes" | "sometimes" | "no";
 
 export type RiskLevel = "low" | "medium" | "high";
 
+export type UserProfile = "person" | "business";
+
 export interface DiagnosticModule {
   id: ModuleId;
   title: string;
@@ -47,6 +49,8 @@ export interface Recommendation {
   summary: string;
   impact: string;
   nextStep: string;
+  urgencyLabel: string;
+  firstWeekPlan: string[];
 }
 
 export interface LearningResource {
@@ -57,6 +61,8 @@ export interface LearningResource {
   description: string;
   source: string;
   url: string;
+  estimatedTime?: string;
+  formatLabel?: string;
 }
 
 export interface EducationalTopic {
@@ -65,6 +71,7 @@ export interface EducationalTopic {
   explanation: string;
   everydayExample: string;
   quickTips: string[];
+  slug: string;
 }
 
 export interface TopicDetailPage {
@@ -73,6 +80,7 @@ export interface TopicDetailPage {
   pageTitle: string;
   intro: string;
   whyItMatters: string;
+  quickChecklist: string[];
   warningSigns: string[];
   practicalActions: string[];
   smallBusinessTips: string[];
@@ -92,4 +100,9 @@ export interface DiagnosticResult {
   executiveSummary: string;
   exposureAreas: string[];
   priorityActions: string[];
+  quickWins: string[];
+  reportHeadline: string;
+  profile: UserProfile;
+  profileLabel: string;
+  profileSummary: string;
 }

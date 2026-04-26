@@ -90,6 +90,12 @@ export default function HomePage() {
               <EducationalTopicCard key={topic.moduleId} topic={topic} />
             ))}
           </div>
+
+          <div className="mt-6 flex justify-start">
+            <Button href="/aprenda" variant="secondary">
+              Abrir biblioteca completa
+            </Button>
+          </div>
         </div>
       </section>
 

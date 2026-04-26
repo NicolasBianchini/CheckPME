@@ -41,6 +41,19 @@ export function LearningResourceCard({
         </p>
         <h3 className="mt-2 text-xl font-bold text-slate-950">{resource.title}</h3>
         <p className="mt-3 text-sm leading-7 text-slate-600">{resource.description}</p>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {resource.formatLabel ? (
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+              {resource.formatLabel}
+            </span>
+          ) : null}
+          {resource.estimatedTime ? (
+            <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+              {resource.estimatedTime}
+            </span>
+          ) : null}
+        </div>
       </div>
     </a>
   );

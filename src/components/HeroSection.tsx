@@ -21,8 +21,8 @@ export function HeroSection() {
 
           <div className="flex flex-col gap-4 sm:flex-row">
             <Button href="/diagnostico">Iniciar diagnóstico</Button>
-            <Button href="/#modulos" variant="secondary">
-              Ver os 4 módulos
+            <Button href="/aprenda" variant="secondary">
+              Explorar temas
             </Button>
           </div>
 
@@ -30,6 +30,21 @@ export function HeroSection() {
             <Metric label="16 perguntas" value="4 temas" />
             <Metric label="Resultado final" value="Baixo, médio ou alto risco" />
             <Metric label="Dicas práticas" value="Orientações simples para começar" />
+          </div>
+
+          <div className="grid gap-4 rounded-[2rem] border border-slate-200/80 bg-white/85 p-5 shadow-soft sm:grid-cols-2">
+            <PathCard
+              title="Quer descobrir seu nível de cuidado?"
+              text="Responda às perguntas e veja onde você precisa cuidar mais."
+              actionLabel="Fazer diagnóstico"
+              href="/diagnostico"
+            />
+            <PathCard
+              title="Quer entender os temas com calma?"
+              text="Abra a biblioteca com explicações simples, vídeos e leituras por assunto."
+              actionLabel="Abrir área Aprenda"
+              href="/aprenda"
+            />
           </div>
         </div>
 
@@ -86,6 +101,28 @@ export function HeroSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+function PathCard({
+  title,
+  text,
+  actionLabel,
+  href
+}: {
+  title: string;
+  text: string;
+  actionLabel: string;
+  href: string;
+}) {
+  return (
+    <div className="rounded-[1.6rem] border border-slate-200 bg-slate-50 p-4">
+      <p className="text-base font-bold text-slate-950">{title}</p>
+      <p className="mt-2 text-sm leading-7 text-slate-600">{text}</p>
+      <Button href={href} variant="ghost" className="mt-4 px-0 py-0 text-sm">
+        {actionLabel}
+      </Button>
+    </div>
   );
 }
 

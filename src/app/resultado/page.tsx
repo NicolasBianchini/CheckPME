@@ -2,33 +2,42 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Download, RotateCcw } from "lucide-react";
 import { Button } from "@/components/Button";
 import { LearningResourceCard } from "@/components/LearningResourceCard";
 import { RecommendationCard } from "@/components/RecommendationCard";
 import { ResultCard } from "@/components/ResultCard";
 import { RiskBadge } from "@/components/RiskBadge";
-import { learningResources } from "@/data/learningResources";
+import { learningResources, topicDetailPages } from "@/data/learningResources";
 import { modules } from "@/data/modules";
-import { STORAGE_KEY, riskSummaryByLevel } from "@/lib/diagnosticContent";
+import {
+  PROFILE_STORAGE_KEY,
+  STORAGE_KEY,
+  riskSummaryByLevel
+} from "@/lib/diagnosticContent";
 import { buildDiagnosticResult } from "@/lib/calculateRisk";
-import { parseStoredAnswers } from "@/lib/diagnosticStorage";
-import { AnswersMap, DiagnosticResult } from "@/types/diagnostic";
+import { parseStoredAnswers, parseStoredProfile } from "@/lib/diagnosticStorage";
+import { AnswersMap, DiagnosticResult, UserProfile } from "@/types/diagnostic";
 
 export default function ResultPage() {
   const router = useRouter();
   const [answers, setAnswers] = useState<AnswersMap | null>(null);
+  const [profile, setProfile] = useState<UserProfile>("person");
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     const parsedAnswers = parseStoredAnswers(window.localStorage.getItem(STORAGE_KEY));
+    const parsedProfile = parseStoredProfile(window.localStorage.getItem(PROFILE_STORAGE_KEY));
     setAnswers(Object.keys(parsedAnswers).length > 0 ? parsedAnswers : null);
+    setProfile(parsedProfile);
     setIsHydrated(true);
   }, []);
 
   const result = useMemo<DiagnosticResult | null>(() => {
     if (!answers) return null;
-    return buildDiagnosticResult(answers);
-  }, [answers]);
+    return buildDiagnosticResult(answers, profile);
+  }, [answers, profile]);
 
   if (!isHydrated) {
     return null;
@@ -65,16 +74,44 @@ export default function ResultPage() {
     router.push("/diagnostico");
   }
 
+  function handlePrintReport() {
+    window.print();
+  }
+
   const recommendedResources = learningResources.filter((resource) =>
     result.criticalModules.some((module) => module.moduleId === resource.moduleId)
   );
+  const topStrength = result.strengths[0];
+  const firstCriticalTopic = result.recommendations[0]
+    ? topicDetailPages.find((item) => item.moduleId === result.recommendations[0].moduleId)
+    : null;
 
   return (
-    <div className="px-6 py-10 lg:px-8 lg:py-14">
+    <div className="px-6 py-8 lg:px-8 lg:py-12">
       <div className="mx-auto max-w-6xl space-y-6">
-        <ResultCard result={result} />
+        <div className="no-print flex flex-col gap-3 rounded-[1.5rem] border border-slate-200 bg-white/90 p-4 shadow-soft sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold text-slate-950">
+              Relatório para perfil: {result.profileLabel}
+            </p>
+            <p className="mt-1 text-sm leading-6 text-slate-600">{result.profileSummary}</p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Button variant="secondary" onClick={handleRestartDiagnostic} className="gap-2">
+              <RotateCcw className="h-4 w-4" />
+              Refazer
+            </Button>
+            <Button onClick={handlePrintReport} className="gap-2">
+              <Download className="h-4 w-4" />
+              Baixar PDF
+            </Button>
+          </div>
+        </div>
 
-        <section className="grid gap-6 lg:grid-cols-3">
+        <main className="print-report space-y-6">
+          <ResultCard result={result} />
+
+        <section className="grid gap-4 lg:grid-cols-3">
           <ExecutivePanel
             title="Maior ponto de atenção"
             tone="danger"
@@ -88,7 +125,7 @@ export default function ResultPage() {
             text={result.exposureAreas[0] ?? riskSummaryByLevel[result.level]}
           />
           <ExecutivePanel
-            title="Comece por aqui"
+            title="Primeiro passo recomendado"
             tone="success"
             text={result.priorityActions[0]}
           />
@@ -99,7 +136,7 @@ export default function ResultPage() {
             <div className="mb-6 flex items-center justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">
-                  Resultado por tema
+                  Mapa do diagnóstico
                 </p>
                 <h2 className="mt-2 text-2xl font-bold text-slate-950">
                   Onde você está melhor e onde precisa cuidar mais
@@ -148,10 +185,21 @@ export default function ResultPage() {
 
           <div className="space-y-6">
             <InfoPanel
+              title="Resumo do relatório"
+              items={[
+                `Você respondeu ${result.answeredQuestions} perguntas e concluiu ${result.completionRate}% do diagnóstico.`,
+                `Seu nível atual ficou em ${getRiskLabelText(result.level)}.`,
+                result.reportHeadline
+              ]}
+            />
+
+            <InfoPanel
               title="Pontos fortes"
               items={
                 result.strengths.length > 0
-                  ? result.strengths.map((item) => `${item.title}: aqui você mostrou cuidados melhores.`)
+                  ? result.strengths.map(
+                      (item) => `${item.title}: aqui você mostrou cuidados melhores.`
+                    )
                   : ["Seu resultado mostra pontos para melhorar em todos os temas."]
               }
             />
@@ -165,9 +213,63 @@ export default function ResultPage() {
             />
 
             <InfoPanel
-              title="Próximos passos recomendados"
-              items={result.priorityActions}
+              title="O que fazer nesta semana"
+              items={result.quickWins}
             />
+          </div>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="rounded-[2rem] border border-slate-200/80 bg-white/95 p-6 shadow-soft">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">
+              Leitura do seu cenário
+            </p>
+            <h2 className="mt-2 text-2xl font-bold text-slate-950">
+              O que seu resultado quer dizer, em linguagem simples
+            </h2>
+            <div className="mt-5 space-y-4">
+              <ReportLine
+                label="Seu ponto mais forte"
+                text={
+                  topStrength
+                    ? `${topStrength.title} foi o tema em que você mostrou mais cuidado até aqui.`
+                    : "Ainda não apareceu um tema claramente forte no resultado."
+                }
+              />
+              <ReportLine
+                label="Seu maior risco hoje"
+                text={result.exposureAreas[0] ?? riskSummaryByLevel[result.level]}
+              />
+              <ReportLine
+                label="Vale olhar agora"
+                text={`Comece estudando ${result.criticalModules
+                  .map((item) => item.title)
+                  .join(" e ")} para corrigir o que tem mais chance de gerar problema.`}
+              />
+            </div>
+          </div>
+
+          <div className="rounded-[2rem] border border-brand-100 bg-gradient-to-br from-brand-50 via-white to-emerald-50 p-6 shadow-soft">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">
+              Próximo caminho
+            </p>
+            <h2 className="mt-2 text-2xl font-bold text-slate-950">
+              Você pode seguir por dois caminhos a partir daqui
+            </h2>
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <PathChoice
+                title="Estudar o tema mais crítico"
+                text="Abra a área Aprenda e veja explicações, checklist e materiais ligados ao seu maior ponto de atenção."
+                href={firstCriticalTopic ? `/aprenda/${firstCriticalTopic.slug}` : "/aprenda"}
+                linkLabel="Abrir tema"
+              />
+              <PathChoice
+                title="Rever depois de ajustar"
+                text="Aplique duas ou três mudanças simples e refaça o diagnóstico para comparar sua evolução."
+                href="/diagnostico"
+                linkLabel="Refazer perguntas"
+              />
+            </div>
           </div>
         </section>
 
@@ -223,9 +325,18 @@ export default function ResultPage() {
               ))
             )}
           </div>
+
+          <div className="flex justify-start">
+            <Link
+              href="/aprenda"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-700 transition hover:text-brand-800"
+            >
+              Ver toda a biblioteca de temas
+            </Link>
+          </div>
         </section>
 
-        <section className="rounded-[2rem] border border-slate-200/80 bg-white/95 p-6 shadow-soft">
+        <section className="no-print rounded-[2rem] border border-slate-200/80 bg-white/95 p-6 shadow-soft">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">
@@ -244,15 +355,22 @@ export default function ResultPage() {
               <Button variant="secondary" onClick={handleRestartDiagnostic}>
                 Refazer diagnóstico
               </Button>
-              <Button disabled>
-                Baixar Guia Prático em PDF
+              <Button onClick={handlePrintReport}>
+                Baixar relatório em PDF
               </Button>
             </div>
           </div>
         </section>
+        </main>
       </div>
     </div>
   );
+}
+
+function getRiskLabelText(level: DiagnosticResult["level"]) {
+  if (level === "low") return "baixo risco";
+  if (level === "medium") return "médio risco";
+  return "alto risco";
 }
 
 function InfoPanel({ title, items }: { title: string; items: string[] }) {
@@ -270,6 +388,42 @@ function InfoPanel({ title, items }: { title: string; items: string[] }) {
         ))}
       </div>
     </section>
+  );
+}
+
+function ReportLine({ label, text }: { label: string; text: string }) {
+  return (
+    <div className="rounded-[1.4rem] border border-slate-200 bg-slate-50 p-4">
+      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">
+        {label}
+      </p>
+      <p className="mt-2 text-sm leading-7 text-slate-700">{text}</p>
+    </div>
+  );
+}
+
+function PathChoice({
+  title,
+  text,
+  href,
+  linkLabel
+}: {
+  title: string;
+  text: string;
+  href: string;
+  linkLabel: string;
+}) {
+  return (
+    <div className="rounded-[1.5rem] border border-slate-200 bg-white/90 p-4">
+      <p className="text-base font-bold text-slate-950">{title}</p>
+      <p className="mt-2 text-sm leading-7 text-slate-600">{text}</p>
+      <Link
+        href={href}
+        className="mt-4 inline-flex text-sm font-semibold text-brand-700 transition hover:text-brand-800"
+      >
+        {linkLabel}
+      </Link>
+    </div>
   );
 }
 
