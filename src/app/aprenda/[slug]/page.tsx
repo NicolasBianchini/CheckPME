@@ -142,22 +142,43 @@ function TopicBlock({
   tone: "warning" | "success" | "brand" | "neutral";
 }) {
   const tones = {
-    warning: "border-amber-200 bg-amber-50 text-amber-950",
-    success: "border-emerald-200 bg-emerald-50 text-emerald-950",
-    brand: "border-brand-200 bg-brand-50 text-brand-950",
-    neutral: "border-slate-200 bg-slate-50 text-slate-900"
+    warning:
+      "border-amber-300 bg-white text-slate-950 shadow-[0_20px_45px_rgba(120,53,15,0.06)]",
+    success:
+      "border-emerald-300 bg-white text-slate-950 shadow-[0_20px_45px_rgba(6,95,70,0.06)]",
+    brand:
+      "border-blue-300 bg-white text-slate-950 shadow-[0_20px_45px_rgba(29,78,216,0.06)]",
+    neutral:
+      "border-slate-300 bg-white text-slate-950 shadow-[0_20px_45px_rgba(15,23,42,0.05)]"
+  };
+
+  const iconTones = {
+    warning: "bg-amber-100 text-amber-900 ring-1 ring-amber-200",
+    success: "bg-emerald-100 text-emerald-900 ring-1 ring-emerald-200",
+    brand: "bg-blue-100 text-blue-900 ring-1 ring-blue-200",
+    neutral: "bg-slate-100 text-slate-900 ring-1 ring-slate-200"
+  };
+
+  const itemTones = {
+    warning: "bg-amber-50 text-slate-800 ring-1 ring-amber-100",
+    success: "bg-emerald-50 text-slate-800 ring-1 ring-emerald-100",
+    brand: "bg-blue-50 text-slate-800 ring-1 ring-blue-100",
+    neutral: "bg-slate-50 text-slate-800 ring-1 ring-slate-200"
   };
 
   return (
     <section className={`rounded-[1.8rem] border p-6 shadow-soft ${tones[tone]}`}>
       <div className="flex items-center gap-3">
-        <div className="rounded-2xl bg-white/70 p-3">{icon}</div>
+        <div className={`rounded-2xl p-3 ${iconTones[tone]}`}>{icon}</div>
         <h2 className="text-2xl font-bold">{title}</h2>
       </div>
 
       <div className="mt-5 space-y-3">
         {items.map((item) => (
-          <p key={item} className="rounded-2xl bg-white/60 px-4 py-4 text-sm leading-7">
+          <p
+            key={item}
+            className={`rounded-2xl px-4 py-4 text-sm leading-7 ${itemTones[tone]}`}
+          >
             {item}
           </p>
         ))}

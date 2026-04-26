@@ -12,14 +12,14 @@ export function ModuleCard({ module }: { module: DiagnosticModule }) {
   const topicPage = topicDetailPages.find((item) => item.moduleId === module.id);
 
   return (
-    <article className="group rounded-[1.8rem] border border-slate-200/80 bg-white/90 p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-panel">
+    <article className="group flex h-full flex-col rounded-[1.8rem] border border-slate-200/80 bg-white/90 p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-panel">
       <div
         className={`mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${module.accentClass}`}
       >
         <ModuleIcon moduleId={module.id} />
       </div>
 
-      <div className="space-y-3">
+      <div className="flex h-full flex-col">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">
             Módulo {module.guideModule}
@@ -27,16 +27,19 @@ export function ModuleCard({ module }: { module: DiagnosticModule }) {
           <h3 className="mt-2 text-2xl font-bold text-slate-900">{module.shortTitle}</h3>
         </div>
 
-        <p className="text-sm font-medium text-slate-700">{module.subtitle}</p>
-        <p className="text-sm leading-7 text-slate-600">{module.description}</p>
-        <p className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+        <div className="flex-1 space-y-5 pt-4">
+          <p className="text-sm font-medium text-slate-700">{module.subtitle}</p>
+          <p className="text-sm leading-7 text-slate-600">{module.description}</p>
+        </div>
+
+        <p className="mt-5 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
           <span className="font-semibold text-slate-800">Foco do guia:</span>{" "}
           {module.learningFocus}
         </p>
         {topicPage ? (
           <Link
             href={`/aprenda/${topicPage.slug}`}
-            className="inline-flex text-sm font-semibold text-brand-700 transition hover:text-brand-800"
+            className="mt-5 inline-flex text-sm font-semibold text-brand-700 transition hover:text-brand-800"
           >
             Ver página deste tema
           </Link>
