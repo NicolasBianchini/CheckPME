@@ -6,6 +6,8 @@ import { educationalTopics } from "@/data/learningResources";
 import { modules } from "@/data/modules";
 
 export default function HomePage() {
+  const guidePdfPath = "/Guia_Pratico_Seguranca_Informacao_Usuarios_e_PMEs.pdf";
+
   return (
     <div className="pb-20">
       <HeroSection />
@@ -92,9 +94,14 @@ export default function HomePage() {
           </div>
 
           <div className="mt-6 flex justify-start">
-            <Button href="/aprenda" variant="secondary">
-              Abrir biblioteca completa
-            </Button>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button href="/aprenda" variant="secondary">
+                Abrir biblioteca completa
+              </Button>
+              <Button href={guidePdfPath} download variant="ghost">
+                Baixar guia prático
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -114,7 +121,12 @@ export default function HomePage() {
             </p>
           </div>
 
-          <Button href="/diagnostico">Iniciar diagnóstico</Button>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Button href="/diagnostico">Iniciar diagnóstico</Button>
+            <Button href={guidePdfPath} download variant="secondary">
+              Baixar guia
+            </Button>
+          </div>
         </div>
       </section>
     </div>

@@ -6,6 +6,7 @@ import { LearningResourceCard } from "@/components/LearningResourceCard";
 import { educationalTopics, learningResources } from "@/data/learningResources";
 
 export default function LearnIndexPage() {
+  const guidePdfPath = "/Guia_Pratico_Seguranca_Informacao_Usuarios_e_PMEs.pdf";
   const featuredResources = learningResources.slice(0, 4);
 
   return (
@@ -30,6 +31,13 @@ export default function LearnIndexPage() {
                 className="inline-flex items-center justify-center rounded-2xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700"
               >
                 Fazer diagnóstico
+              </Link>
+              <Link
+                href={guidePdfPath}
+                download
+                className="inline-flex items-center justify-center rounded-2xl border border-brand-200 bg-white px-5 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50"
+              >
+                Baixar guia prático
               </Link>
               <Link
                 href="/#modulos"

@@ -38,7 +38,7 @@ export default function DiagnosticPage() {
   }
 
   return (
-    <div className="px-6 py-10 lg:px-8 lg:py-14">
+    <div className="px-6 py-10 pb-32 lg:px-8 lg:py-14">
       <div className="mx-auto max-w-6xl space-y-6">
         <div className="space-y-3">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">
@@ -186,7 +186,7 @@ export default function DiagnosticPage() {
           </aside>
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+        <div className="hidden flex-col gap-3 sm:flex sm:flex-row sm:justify-between">
           <Button variant="secondary" onClick={previousQuestion} disabled={currentIndex === 0}>
             Voltar
           </Button>
@@ -195,6 +195,36 @@ export default function DiagnosticPage() {
               Limpar respostas
             </Button>
             <Button onClick={nextQuestion} disabled={!selectedValue}>
+              {isLastQuestion ? "Ver relatório" : "Próxima pergunta"}
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200/80 bg-white/95 px-4 py-4 shadow-[0_-10px_30px_rgba(15,23,42,0.08)] backdrop-blur sm:hidden">
+        <div className="mx-auto max-w-6xl">
+          <div className="min-w-0">
+            <p className="mb-2 text-xs font-medium text-slate-500">
+              {selectedValue
+                ? "Resposta selecionada. Toque para continuar."
+                : "Escolha uma opção para liberar o avanço."}
+            </p>
+          </div>
+          <div className="mt-3 grid grid-cols-[auto_minmax(0,1fr)] items-stretch gap-3">
+            <Button
+              variant="secondary"
+              onClick={previousQuestion}
+              disabled={currentIndex === 0}
+              className="min-h-[52px] px-4"
+            >
+              Voltar
+            </Button>
+            <Button
+              onClick={nextQuestion}
+              disabled={!selectedValue}
+              fullWidth
+              className="min-h-[52px]"
+            >
               {isLastQuestion ? "Ver relatório" : "Próxima pergunta"}
             </Button>
           </div>

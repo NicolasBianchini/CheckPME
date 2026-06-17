@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Download, RotateCcw } from "lucide-react";
+import { Download, Printer, RotateCcw } from "lucide-react";
 import { Button } from "@/components/Button";
 import { LearningResourceCard } from "@/components/LearningResourceCard";
 import { RecommendationCard } from "@/components/RecommendationCard";
@@ -21,6 +21,7 @@ import { parseStoredAnswers, parseStoredProfile } from "@/lib/diagnosticStorage"
 import { AnswersMap, DiagnosticResult, UserProfile } from "@/types/diagnostic";
 
 export default function ResultPage() {
+  const guidePdfPath = "/Guia_Pratico_Seguranca_Informacao_Usuarios_e_PMEs.pdf";
   const router = useRouter();
   const [answers, setAnswers] = useState<AnswersMap | null>(null);
   const [profile, setProfile] = useState<UserProfile>("person");
@@ -101,9 +102,13 @@ export default function ResultPage() {
               <RotateCcw className="h-4 w-4" />
               Refazer
             </Button>
-            <Button onClick={handlePrintReport} className="gap-2">
+            <Button href={guidePdfPath} download className="gap-2">
               <Download className="h-4 w-4" />
-              Baixar PDF
+              Baixar guia prático
+            </Button>
+            <Button onClick={handlePrintReport} className="gap-2">
+              <Printer className="h-4 w-4" />
+              Imprimir relatório
             </Button>
           </div>
         </div>
@@ -334,6 +339,11 @@ export default function ResultPage() {
               Ver toda a biblioteca de temas
             </Link>
           </div>
+          <div className="flex justify-start">
+            <Button href={guidePdfPath} download variant="secondary">
+              Baixar guia completo em PDF
+            </Button>
+          </div>
         </section>
 
         <section className="no-print rounded-[2rem] border border-slate-200/80 bg-white/95 p-6 shadow-soft">
@@ -355,8 +365,11 @@ export default function ResultPage() {
               <Button variant="secondary" onClick={handleRestartDiagnostic}>
                 Refazer diagnóstico
               </Button>
-              <Button onClick={handlePrintReport}>
-                Baixar relatório em PDF
+              <Button href={guidePdfPath} download>
+                Baixar guia prático
+              </Button>
+              <Button variant="ghost" onClick={handlePrintReport}>
+                Imprimir relatório
               </Button>
             </div>
           </div>
